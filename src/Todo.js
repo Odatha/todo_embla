@@ -11,19 +11,28 @@ class Todo extends Component{
             lists:[
                 {
                 text: 'power on the devices',
-                key:Date.now()
+                key:1
                 },
                 {
                     text: 'dinner party',
-                    key:Date.now()
+                    key:2
                     },
                     {
                         text: 'power on the devices',
-                        key:Date.now()
+                        key:3
                         }
             ]
         };
         this.addList=this.addList.bind(this);
+    }
+
+    deleteList(deleteItem){
+        //console.log(deleteItem);
+        var filterItems = this.state.lists.filter((newLists) => {
+            return newLists !=deleteItem
+        });
+        this.setState({lists:filterItems});
+
     }
     addList(e){
         if(this._inputElement.value !==""){
@@ -60,7 +69,9 @@ class Todo extends Component{
                         <button type="submit">Add to the list</button>
                     </form>
                 </div>
-                <TodoLists displays={this.state.lists}/>
+                <TodoLists 
+                deleteList={this.deleteList.bind(this)}
+                displays={this.state.lists}/>
             </div>
         );
     }
