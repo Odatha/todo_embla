@@ -1,6 +1,7 @@
 
 import React,{Component} from "react";
 import TodoLists from "./TodoLists";
+import DatePicker from 'react-date-picker';
 
 
 class Todo extends Component{
@@ -21,10 +22,12 @@ class Todo extends Component{
                         text: 'power on the devices',
                         key:3
                         }
-            ]
+            ],
+            date:new Date()  
         };
         this.addList=this.addList.bind(this);
     }
+    onChange = date => this.setState({date});
 
     deleteList(deleteItem){
         //console.log(deleteItem);
@@ -64,6 +67,13 @@ class Todo extends Component{
 
                         <input ref={(a) => this._inputElement = a}
                         placeholder="what are your todo s??"/>
+
+                        <div>
+                            <DatePicker
+                            onChange={this.onChange}
+                            value={this.state.date}
+                            />
+                        </div>
 
                         
                         <button type="submit">Add to the list</button>
