@@ -12,18 +12,21 @@ class Todo extends Component{
             lists:[
                 {
                 text: 'power on the devices',
-                key:1
+                key:1,
+                date:"5/6/2019"
                 },
                 {
                     text: 'dinner party',
-                    key:2
+                    key:2,
+                    date:"6/6/2019"
                     },
                     {
                         text: 'power on the devices',
-                        key:3
+                        key:3,
+                        date:"10/6/2019"
                         }
             ],
-            date:new Date()  
+            //date:new Date()  
         };
         this.addList=this.addList.bind(this);
     }
@@ -41,7 +44,8 @@ class Todo extends Component{
         if(this._inputElement.value !==""){
             var newItem={
                 text: this._inputElement.value,
-                key:Date.now()
+                key:Date.now(),
+                date:new Date(this.state.date).toDateString()
             };
 
             this.setState((prevState)=>{
@@ -53,6 +57,7 @@ class Todo extends Component{
         }
 
         console.log(this.state.lists);
+        console.log(this.state.date);
 
         e.preventDefault();
         
