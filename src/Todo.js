@@ -2,6 +2,8 @@
 import React,{Component} from "react";
 import TodoLists from "./TodoLists";
 import DatePicker from 'react-date-picker';
+import FormTodo from "./FormTodo";
+import FormInput from "./FormInput";
 
 
 class Todo extends Component{
@@ -9,21 +11,22 @@ class Todo extends Component{
         super(props);
 
         this.state={
+            edit:false,
             lists:[
                 {
                 text: 'power on the devices',
                 key:1,
-                date:"5/6/2019"
+                date:"5-6-2019"
                 },
                 {
                     text: 'dinner party',
                     key:2,
-                    date:"6/6/2019"
+                    date:"6-6-2019"
                     },
                     {
                         text: 'power on the devices',
                         key:3,
-                        date:"10/6/2019"
+                        date:"10-6-2019"
                         }
             ],
             //date:new Date()  
@@ -40,53 +43,105 @@ class Todo extends Component{
         this.setState({lists:filterItems});
 
     }
-    addList(e){
-        if(this._inputElement.value !==""){
-            var newItem={
-                text: this._inputElement.value,
-                key:Date.now(),
-                date:new Date(this.state.date).toDateString()
-            };
 
-            this.setState((prevState)=>{
-                return{
-                    lists:prevState.lists.concat(newItem)
-                };
-            });
-            this._inputElement.value="";
-        }
+    onEditHandle(e){
+        this.setState({
+            edit:true,
+            key:arguments[0],
+            text:arguments[1],
+            date:arguments[2]
+        });
+    }
+
+    onUpdateHandle(e){
+        e.preventDefault();
+
+        this.setState({
+            lists:this.state.lists.map(item=>{
+                if(item.key===this.state.key){
+                    item['text']=e.target.updatedItem.value;
+                    item['date']=e.target.updatedDate.value;
+                    return item;
+                }
+                return item;
+            })
+        });
+        this.setState({
+            edit:false
+        });
+    }
+
+    addList(e){
+        e.preventDefault();
+
+        this.setState({
+            lists: [...this.state.lists,{
+                key:Date.now(),
+                text:e.target.item.value,
+                date:e.target.pickedDate.value
+            }]
+        });
+        
+            e.target.item.value="";
+        
 
         console.log(this.state.lists);
         console.log(this.state.date);
 
-        e.preventDefault();
+        
         
 
     }
+
+    renderEditForm(){
+        if(this.state.edit){
+            return(
+                <FormTodo
+                    onSubmit={this.onUpdateHandle.bind(this)}  label="Update">
+                    <FormInput
+                        name={"updatedItem"}
+                        type={"text"}
+                        defaultValue={this.state.text}>
+                        
+                    </FormInput>
+                    <FormInput
+                        name={"updatedDate"}
+                        type={"date"}
+                        defaultValue={this.state.date}>
+
+                    </FormInput>
+                </FormTodo>
+            )
+                 
+        }
+    }
+
     render(){
         return(
             <div className="mainList">
                 <div className="header">
-                    <form onSubmit={this.addList}>
+                {this.renderEditForm()}
+                <FormTodo
+                        onSubmit={this.addList.bind(this)} label="Add"> 
+                        <FormInput
+                            type={"text"}
+                            name={"item"}
+                            placeholder={"what are your todo s??"}>
+                    
+                        </FormInput>
+
+                        <FormInput
+                            type={"date"}
+                            name={"pickedDate"}>
+                        </FormInput>
 
 
-                        <input ref={(a) => this._inputElement = a}
-                        placeholder="what are your todo s??"/>
-
-                        <div>
-                            <DatePicker
-                            onChange={this.onChange}
-                            value={this.state.date}
-                            />
-                        </div>
-
-                        
-                        <button type="submit">Add to the list</button>
-                    </form>
-                </div>
+                     </FormTodo>   
                 <TodoLists 
+                onEditHandle={this.onEditHandle.bind(this)}
                 deleteList={this.deleteList.bind(this)}
                 displays={this.state.lists}/>
+            </div>
             </div>
         );
     }

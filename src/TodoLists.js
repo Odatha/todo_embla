@@ -10,10 +10,12 @@ class TodoLists extends Component{
                 return <li key={item.key}>
                 <p>{item.text}</p>
                 <p>{item.date}</p>
+                <button onClick={this.props.onEditHandle.bind(null,item.key,item.text,item.date)}>Edit</button>
                 <button onClick={this.props.deleteList.bind(null, item)} >
                 Delete</button></li>
 
-            }                                                                                                                                                                              )}
+            }                                                                                                                                                                              
+            )}
         </ul>;
         }
         
